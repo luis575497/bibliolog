@@ -14,5 +14,5 @@ class Reference(db.Model):
     details =  db.Column(db.Text())
     fecha = db.Column(db.Date)
     user_type = db.Column(db.String(50))
-    email = db.Column(db.String(25), unique=True, nullable=False)
+    email = db.Column(db.String(25), nullable=False)
     modality = db.Column(db.String(50))

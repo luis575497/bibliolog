@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+<div class="row ">
+    <div class="pt-2 align-self-center">
+        <form class="card p-3" method="POST" action="">
+            <div class="form-group mt-3">
+                {{ form.activity.label }}
+                {{ form.activity(class='form-control', value=ref.name)|safe }}
+            </div>
+            <div class="form-group mt-3">
+                {{ form.date.label }}
+                {{ form.date(class='form-control', value=ref.fecha)|safe }}
+            </div>
+            <div class="form-group mt-3">
+                {{ form.details.label }}
+                {{ form.details(class='form-control', value=ref.details)|safe }}
+            </div>
+            <div class="form-group mt-3">
+                {{ form.email.label }}
+                {{ form.email(class='form-control', value=ref.email)|safe }}
+            </div>
+            <div class="form-group mt-3">
+                {{ form.user_type.label }}
+                {{ form.user_type(class='form-control')|safe }}
+            </div>
+            <div class="form-group mt-3">
+                {{ form.modality.label }}
+                {{ form.modality(class='form-control')|safe }}
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group mt-3 d-grid gap-2">
+                        {{ form.update( class='btn btn-success') }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group mt-3 d-grid gap-2">
+                        <a class="btn btn-warning" href="{{ url_for('reference.index') }}"> Cancelar </a>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group mt-3 d-grid gap-2">
+                        <a class="btn btn-danger" href="{{url_for('reference.delete_reference', id=ref.id)}}"> Eliminar </a>
+                    </div>
+                </div>
+            </div>
+            
+        </form>
+    </div>
+</div>
+{% endblock %}

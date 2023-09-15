@@ -1,8 +1,15 @@
 {% extends "base.html" %}
 
 {% block content %}
+
+
 <div class="row">
-    <div class="col-sm-4 pt-2">
+
+    <div class="col-sm-4 pt-2 ">
+        <div class="card p-3 mb-2">
+            <h1>Usuario</h1>
+            <p>Datos y estadísiticas</p>
+        </div>
         <form class="card p-3" method="POST" action="{{ url_for('reference.create_reference') }}">
             <div class="form-group mt-3">
                 {{ form.activity.label }}

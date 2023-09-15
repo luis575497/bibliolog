@@ -11,6 +11,7 @@ class Reference(FlaskForm):
     details = StringField(u'Detalles', widget=TextArea())
     email = StringField('Email', validators=[DataRequired(), Email()])
     submit = SubmitField('Ingresar')
+    update = SubmitField('Actualizar')
     date = DateField('Fecha')
     user_type = SelectField(u'Tipo de usuario', choices=
                             [('estudiantes', 'Estudiante'), 
