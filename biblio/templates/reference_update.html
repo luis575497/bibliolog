@@ -5,10 +5,12 @@
 <div class="container">
 <div class="row ">
     <div class="pt-2 align-self-center">
-        <form class="card p-3" method="POST" action="">
+        <h1 class="mb-4"> Actualizar referencia</h1>
+        <form class="card p-3" method="POST" action="{{ url_for('reference.update_reference', id=ref.id) }}">
             <div class="form-group mt-3">
+                {{ form.csrf_token }}
                 {{ form.activity.label }}
-                {{ form.activity(class='form-control', value=ref.name)|safe }}
+                {{ form.activity(class='form-control')|safe }}
             </div>
             <div class="form-group mt-3">
                 {{ form.date.label }}
@@ -16,7 +18,7 @@
             </div>
             <div class="form-group mt-3">
                 {{ form.details.label }}
-                {{ form.details(class='form-control', value=ref.details)|safe }}
+                {{ form.details(class='form-control')|safe }}
             </div>
             <div class="form-group mt-3">
                 {{ form.email.label }}
@@ -24,26 +26,26 @@
             </div>
             <div class="form-group mt-3">
                 {{ form.user_type.label }}
-                {{ form.user_type(class='form-control')|safe }}
+                {{ form.user_type(class='form-control') }}
             </div>
             <div class="form-group mt-3">
                 {{ form.modality.label }}
-                {{ form.modality(class='form-control')|safe }}
+                {{ form.modality(class='form-control') }}
             </div>
             <div class="row">
                 <div class="col-sm-4">
                     <div class="form-group mt-3 d-grid gap-2">
-                        {{ form.update( class='btn btn-success') }}
+                         <button class="btn btn-success" type="submit"> {{font_awesome.render_icon("fa-solid fa-arrows-rotate")}} Actualizar </i></button>
                     </div>
                 </div>
                 <div class="col-sm-4">
                     <div class="form-group mt-3 d-grid gap-2">
-                        <a class="btn btn-warning" href="{{ url_for('reference.index') }}"> Cancelar </a>
+                        <a class="btn btn-warning" href="{{ url_for('reference.index') }}"> {{font_awesome.render_icon("fa-solid fa-ban")}} Cancelar </a>
                     </div>
                 </div>
                 <div class="col-sm-4">
                     <div class="form-group mt-3 d-grid gap-2">
-                        <a class="btn btn-danger" href="{{url_for('reference.delete_reference', id=ref.id)}}"> Eliminar </a>
+                        <a class="btn btn-danger" href="{{url_for('reference.delete_reference', id=ref.id)}}"> {{font_awesome.render_icon("fa-solid fa-trash")}} Eliminar </a>
                     </div>
                 </div>
             </div>

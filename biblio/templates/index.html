@@ -2,16 +2,40 @@
 
 {% block content %}
 
-
 <div class="row">
-
-    <div class="col-sm-4 pt-2 ">
-        <div class="card p-3 mb-2">
-            <h1>Usuario</h1>
-            <p>Datos y estadísiticas</p>
+    <div class="col-sm-4 pt-2 ">      
+        <div class="card p-3 mb-2 shadow">
+            <div class="row">
+                <div class="col col-lg-8">
+                    <h1 class="h1">{{user.name}}</h1>
+                    <p class="h6">Referencias ({{ month }}): {{ month_ref }} </p>
+                    <table class="table">
+                        <thead>
+                          <tr>
+                            <th scope="col">Estudiantes</th>
+                            <th scope="col">Docentes</th>
+                            <th scope="col">Externos</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{ count_user_est }}</td>
+                                <td>{{ count_user_doc }} </td>
+                                <td>{{ count_user_pub }} </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <a class="btn btn-warning" href="{{ url_for('login.profile', id=user.id) }}"> {{font_awesome.render_icon("fa-solid fa-user")}} Perfil</a>
+                    <a class="btn btn-primary" href="{{ url_for('stats.reference_stats')}}"> {{font_awesome.render_icon("fa-solid fa-chart-simple")}} Estadísticas </a>
+                </div>
+                <div class="col-md-auto">
+                    <img class="rounded-circle shadow" src="{{ avatars.robohash(user.email, size='100') }}">
+                </div>
+            </div>
         </div>
-        <form class="card p-3" method="POST" action="{{ url_for('reference.create_reference') }}">
+        <form class="card p-3 shadow" method="POST" action="{{ url_for('reference.create_reference') }}">
             <div class="form-group mt-3">
+                {{ form.csrf_token }}
                 {{ form.activity.label }}
                 {{ form.activity(class='form-control')|safe }}
             </div>
@@ -36,12 +60,17 @@
                 {{ form.modality(class='form-control')|safe }}
             </div>
             <div class="form-group mt-3 d-grid gap-2">
-                {{ form.submit( class='btn btn-success') }}
+                <button class="btn btn-success" type="submit"> {{font_awesome.render_icon("fa-solid fa-plus")}} Crear </i></button>
             </div>
         </form>
     </div>
     <div class="col-sm-8 pt-2">
-        <table class="table">
+        <form method="POST" action="{{url_for('reference.search')}}" class="form-inline">
+            <div class="column is-one-third is-offset-one-third">
+                <input class="form-control mr-sm-2 mb-4 shadow" type="text" class="input" placeholder="Buscar una referencia realizada" name="query" style="border: 0px solid #ced4da; font-size: 1.5rem;">
+            </div>
+        </form>
+        <table class="table shadow rounded">
             <thead>
               <tr>
                 <th scope="col">#</th>
@@ -51,18 +80,53 @@
                 <th scope="col">Acción</th>
               </tr>
             </thead>
-            <tbody>
-                {% for ref in references %}
+            <tbody id="results">
+                {% for ref in references.items %}
                   <tr>
-                    <th scope="row">{{ref.id}}</th>
+                    <th scope="row">{{ loop.index0 + 1}}</th>
                     <td>{{ref.fecha}}</td> 
                     <td>{{ref.name}}</td>
                     <td>{{ref.email}}</td>
-                    <td><a href="{{url_for('reference.update_reference', id=ref.id)}}" class="btn btn-primary">Editar</a></td>
+                    <td><a href="{{url_for('reference.update_reference', id=ref.id)}}" class="btn btn-primary">{{font_awesome.render_icon("fa-solid fa-pen-to-square")}} Editar</a></td>
                   </tr>
                 {% endfor %}
             </tbody>
           </table>
+          <!-- Links de paginación de la tabla-->
+          <div class="text-right">
+            <a href="{{ url_for('reference.index', page=references.prev_num) }}"
+            class="btn btn-outline-dark 
+            {% if references.page == 1 %}disabled{% endif %}">
+                &laquo;
+            </a>
+            <!-- Recorra el número de páginas para mostrar un enlace para cada una -->
+            {% for page_num in references.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                {% if page_num %}
+                 <!-- Busque la página activa y establezca el enlace en "Activo"-->
+                    {% if references.page == page_num %}
+                    <a href="{{ url_for('reference.index', page=page_num) }}"
+                    class="btn btn-dark">
+                        {{ page_num }}
+                    </a>
+                    {% else %}
+                    <a href="{{ url_for('reference.index', page=page_num) }}"
+                    class="btn btn-outline-dark">
+                        {{ page_num }}
+                    </a>
+                    {% endif %}
+                {% else %}
+                    ...
+                {% endif %}
+            {% endfor %}
+            <a href="{{ url_for('reference.index', page=references.next_num) }}"
+            class="btn btn-outline-dark 
+            {% if references.page == references.pages %}disabled{% endif %}">
+                &raquo;
+            </a>
+        </div>
+        <p class="text-right mt-3">
+        Página {{ references.page }} de {{ references.pages }}
+        </p>
         
     </div>
 </div>

@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center shadow mt-3 mb-3 pt-5 pb-5 rounded" style="background-color: #fff;">
+
+            <div class="col col-sm-8 ">
+                <form class="p-3 border-left" method="POST" action="{{ url_for('login.profile', id=user.id) }}">
+                    <h1 class="mb-4"> Perfil de usuario</h1>
+                    <div class="form-group mt-3">
+                        {{ form.csrf_token }}
+                        {{ form.name.label }}
+                        {{ form.name(class='form-control')|safe }}
+                    </div>
+                    <div class="form-group mt-3">
+                        {{ form.username.label }}
+                        {{ form.username(class='form-control')|safe }}
+                    </div>
+                    <div class="form-group mt-3">
+                        {{ form.campus.label }}
+                        {{ form.campus(class='form-control')|safe }}
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group mt-3 d-grid gap-2">
+                                 <button class="btn btn-success" type="submit"> {{font_awesome.render_icon("fa-solid fa-arrows-rotate")}} Actualizar </i></button>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group mt-3 d-grid gap-2">
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                    {{font_awesome.render_icon("fa-solid fa-key")}} Cambiar contraseña
+                                  </button>
+                                  <!-- Modal -->
+                                  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                      <div class="modal-content">
+                                        <div class="modal-header">
+                                          <h5 class="modal-title" id="staticBackdropLabel">Cambiar contraseña</h5>
+                                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="border-left">
+                                                <div class="form-group mt-2 mb-2">
+                                                    {{ form.password(class='form-control')|safe }}
+                                                </div>
+                                                <button type="submit" class="btn btn-info mt-2" >{{font_awesome.render_icon("fa-solid fa-key")}} Cambiar </button>
+                                                <button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">{{font_awesome.render_icon("fa-solid fa-ban")}} Close</button>
+                                            </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <!-- Modal -->
+                            </div>
+                            
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group mt-3 d-grid gap-2">
+                                <a class="btn btn-warning" href="{{ url_for('reference.index') }}"> {{font_awesome.render_icon("fa-solid fa-ban")}} Cancelar </a>
+                            </div>
+                        </div>
+                    </div>              
+                </form>
+            </div>
+            <div class="col col-sm-3">
+                <img class="shadow" src="{{ avatars.robohash(user.email, size='250') }}">
+            </div>
+
+    </div>
+</div>
+{% endblock %}

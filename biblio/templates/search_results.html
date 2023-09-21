@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="col pt-2">
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Fecha</th>
+                <th scope="col">Actividad</th>
+                <th scope="col">Detalles</th>
+                <th scope="col">Correo</th>
+                <th scope="col">Acción</th>
+            </tr>
+            </thead>
+            <tbody>
+                {% for ref in results %}
+                <tr>
+                    <th scope="row">{{ loop.index0 + 1}}</th>
+                    <td>{{ref.fecha}}</td> 
+                    <td>{{ref.name}}</td>
+                    <td>{{ref.details}}</td>
+                    <td>{{ref.email}}</td>
+                    <td><a href="{{url_for('reference.update_reference', id=ref.id)}}" class="btn btn-primary">{{font_awesome.render_icon("fa-solid fa-pen-to-square")}} Editar</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+    </div>
+{% endblock %}
+
