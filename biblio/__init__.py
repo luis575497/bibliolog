@@ -18,7 +18,8 @@ def create_app(test_config=None):
         MAIL_PORT = 587,
         MAIL_USERNAME = 'biblioteca@ucuenca.edu.ec',
         MAIL_PASSWORD = 'zgjinssdybxlneot',
-        MAIL_USE_TLS = True
+        MAIL_USE_TLS = True,
+        MAIL_USE_SSL = False,
     )
 
     # ensure the instance folder exists

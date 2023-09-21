@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import current_user, login_required
-from flask_mail import Message
+from flask_mailing import Message
 
 from datetime import datetime, timedelta
 import calendar
@@ -17,7 +17,7 @@ def index():
     if request.method == "GET":
         form_reference = Reference()
         page = request.args.get('page', 1, type=int)
-        references = models.Reference.query.filter( (models.Reference.fecha > datetime.now()) - timedelta(days=30) ).filter(models.Reference.user_id == current_user.id).order_by(models.Reference.fecha.desc()).paginate(page=page, per_page=25)
+        references = models.Reference.query.filter( (models.Reference.fecha > datetime.now()) - timedelta(days=30) ).filter(models.Reference.user_id == current_user.id).order_by(models.Reference.fecha.desc()).paginate(page=page, per_page=15)
         month_ref = models.Reference.query.filter( (models.Reference.fecha > datetime.now()) - timedelta(days=30) ).filter(models.Reference.user_id == current_user.id).count()
         count_user_est = models.Reference.query.filter( (models.Reference.fecha > datetime.now()) - timedelta(days=30) ).filter(models.Reference.user_id == current_user.id).filter(models.Reference.user_type == "estudiantes").count()
         count_user_doc = models.Reference.query.filter( (models.Reference.fecha > datetime.now()) - timedelta(days=30) ).filter(models.Reference.user_id == current_user.id).filter(models.Reference.user_type == "docente-investigador").count()
@@ -37,7 +37,7 @@ def index():
 
 @reference.route("/reference/", methods=["GET" , "POST"])
 @login_required
-def create_reference():
+async def create_reference():
     form_reference = Reference()
     if request.method == "POST" and form_reference.validate():
         bibliotecario = current_user.id
@@ -53,21 +53,26 @@ def create_reference():
 
         db.session.add(new_reference)
         db.session.commit()
-        flash("Referencia creada correctamente")
-        msg = Message("Evaluación de Atención en la Biblioteca Ucuenca",
+        flash("Referencia creada correctamente, enviado correo electrónico al usuario")
+
+        msg = Message(
+              subject="Evaluación de Atención en la Biblioteca Ucuenca",
               sender="biblioteca@ucuenca.edu.ec",
-              recipients=[form_reference.email.data])
-        msg.html = f""" <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+              recipients=[form_reference.email.data],
+              body =f""" <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
                         <h1>Evalúa nuestra atención en la Biblioteca de la Universidad de Cuenca</h1>
                         <p>Estimado/a usuario/a,</p>
                         <p>Fuiste atendido/a por: <strong>{current_user.name}</strong></p>
+                        <p>Recibiste la siguiente referencia: <em> {form_reference.details.data} </em></p>
                         <p>Queremos conocer tu opinión sobre la atención que recibiste en nuestra biblioteca. Por favor, tómate un momento para completar la evaluación haciendo clic en el enlace a continuación:</p>
-                        <a href="ENLACE_PARA_EVALUACIÓN" style="display: inline-block; padding: 12px 20px; background-color: #3498db; color: #fff; text-decoration: none; border-radius: 5px;">Evaluar la atención</a>
+                        <a href="https://forms.gle/XbNLiYKX3sWdWfYF6" style="display: inline-block; padding: 12px 20px; background-color: #3498db; color: #fff; text-decoration: none; border-radius: 5px;">Evaluar la atención</a>
                         <p>Tu opinión es importante para nosotros y nos ayudará a mejorar nuestros servicios. ¡Gracias por tu colaboración!</p>
                         <p>Atentamente,</p>
                         <p>Equipo de la Biblioteca de la Universidad de Cuenca</p>
-                    """
-        mail.send(msg)
+                    """,
+                subtype="html")
+        
+        await mail.send_message(msg)
 
         return redirect(url_for('reference.index'))
 
