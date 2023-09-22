@@ -1,5 +1,190 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div class="row">
+    <div class="col-sm-6">
+        <form class="card p-3 shadow p-4" method="POST" action="{{ url_for('stats.reference_stats') }}">
+            <h3 class="mb-4"> Seleccione el período de búsqueda </h3>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group mt-3">
+                        {{ form.csrf_token }}
+                        {{ form.start_date(class='form-control')|safe }}
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group mt-3">
+                        {{ form.csrf_token }}
+                        {{ form.end_date(class='form-control')|safe }}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mt-3">
+                <div class="form-group mt-3 col-sm-4 d-grid gap-2">
+                    <button class="btn btn-success" type="submit"> {{font_awesome.render_icon("fa-solid fa-magnifying-glass")}} Buscar </button>
+                </div>
+                <div class="form-group mt-3 col-sm-4 d-grid gap-2">
+                    {% if exportar %}
+                        <a class="btn btn-primary" href="{{url_for('stats.export_report', start=exportar.0 ,end=exportar.1 )}}"> {{font_awesome.render_icon("fa-solid fa-magnifying-glass")}} Exportar a CSV </a>
+                    {% endif %}
+                </div>
+            </div>  
+        </form>    
+    </div>
+    
+    <div class="col-sm-3">
+        <div class="card-dash shadow" style="width: 18rem; background-color: #16A596; color: #fff;">    
+            <div class="card-body row">
+                <div class="col-sm-8">
+                    <h5>Estudiantes</h5>
+                    {% if estudiantes %}
+                    <h2> {{estudiantes}} </h2>
+                    {% else %}
+                    <h2> 0 </h2>
+                    {% endif %}
+                </div>
+                <div class="col-sm-4">
+                     <p>{{font_awesome.render_icon("fa-solid fa-graduation-cap fa-2xl")}}</p>
+                </div>
+            <hr>
+            </div>
+        </div>
+        
+        <div class="card-dash shadow mt-2" style="width: 18rem; background-color: #F3C623; color: #fff;">    
+            <div class="card-body row">
+                <div class="col-sm-8">
+                    <h5>Administrativos</h5>
+                    {% if administrativos %}
+                    <h2> {{administrativos}} </h2>
+                    {% else %}
+                    <h2> 0 </h2>
+                    {% endif %}
+                </div>
+                <div class="col-sm-4">
+                     <p>{{font_awesome.render_icon("fa-solid fa-user-tie fa-2xl")}}</p>
+                </div>
+            <hr>
+            </div>
+        </div>
 
+    </div>
+
+    <div class="col-sm-2">
+        <div class="card-dash shadow" style="width: 18rem; background-color: #213555; color: #fff;">    
+            <div class="card-body row">
+                <div class="col-sm-8">
+                    <h5>Docentes</h5>
+                    {% if docentes %}
+                    <h2> {{docentes}} </h2>
+                    {% else %}
+                    <h2> 0 </h2>
+                    {% endif %}
+                </div>
+                <div class="col-sm-4">
+                     <p>{{font_awesome.render_icon("fa-solid fa-chalkboard-user fa-2xl")}}</p>
+                </div>
+            <hr>
+            </div>
+        </div>
+        <div class="card-dash shadow mt-2" style="width: 18rem; background-color: #F73F52; color: #fff;">    
+            <div class="card-body row">
+                <div class="col-sm-8">
+                    <h5>Público Externo</h5>
+                    {% if externos %}
+                    <h2> {{externos}} </h2>
+                    {% else %}
+                    <h2> 0 </h2>
+                    {% endif %}
+                </div>
+                <div class="col-sm-4">
+                     <p>{{font_awesome.render_icon("fa-solid fa-tree-city fa-2xl")}}</p>
+                </div>
+            <hr>
+            </div>
+        </div>
+    </div>
+</div>
+{% if graph_modalidad %}
+<div class="row">
+    <h2>Total de referencias realizadas: {{total_reference}} </h2>
+    <div class="row mt-3">
+        <div style="width:47vw" class="col-sm-6">
+            <canvas id="line-plot"></canvas>
+        </div>
+        <div style="width:47vw" class="col-sm-6">
+            <canvas id="bar-plot"></canvas>
+        </div>
+
+    </div>
+</div>
+
+
+<script>
+    // <!-- Grafico de barras para las modalidades -->
+    var ctx = document.getElementById('bar-plot').getContext('2d');
+    var Modalidad = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: [
+            {% for item in graph_modalidad["labels"] %}
+            "{{ item }}",
+            {% endfor %}
+        ],
+        datasets: [{
+            label: 'Modalidad',
+            data: [
+                {% for item in graph_modalidad["data"] %}
+                "{{ item }}",
+                {% endfor %}
+            ],
+            backgroundColor: [
+                'rgba(247, 63, 82, 0.8)',
+                'rgba(54, 162, 235, 0.2)',
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+    });
+</script>
+<script>
+    // <!-- Grafico de lineas -->
+    // Line chart
+    var lpd = document.getElementById('line-plot').getContext('2d');
+    var line = new Chart(lpd, {
+        type: 'line',
+        data: {
+            labels: [
+                {% for day, count in data_line_chart.items() %}
+                    "{{ day }}",
+                {% endfor %}
+            ],
+            datasets: [{
+                label: 'My First Dataset',
+                data: [
+                    {% for day, count in data_line_chart.items() %}
+                        "{{ count }}",
+                    {% endfor %}
+                ],
+                fill: false,
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1
+                }]
+            }
+        })
+</script>
+
+{% endif %}
 {% endblock %}

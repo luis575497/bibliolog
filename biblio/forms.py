@@ -25,7 +25,8 @@ class Reference(FlaskForm):
     user_type = SelectField(u'Tipo de usuario', choices=
                             [('estudiantes', 'Estudiante'), 
                              ('docente-investigador', 'Docente o Investigador'), 
-                             ('general', 'Público Externo')]) 
+                             ('general', 'Público Externo'),
+                             ("administrativo", "Adminstrativo")]) 
     modality = SelectField(u'Modalidad', choices=
                             [('presencial', 'Presencial'), 
                              ('virtual', 'Virtual'),]) 
@@ -52,3 +53,8 @@ class ProfileForm(FlaskForm):
                              ('paraiso', 'Campus Paraíso'), 
                              ('yanuncay', 'Campus Yanuncay'),
                              ('chistorico', 'Campus Centro Histórico')]) 
+    
+class StatsDateForm(FlaskForm):
+    end_date = DateField('Fecha', default=datetime.today, validators=[InputRequired ()])
+    start_date = DateField('Fecha', validators=[InputRequired ()])
+    submit = SubmitField('Buscar')
