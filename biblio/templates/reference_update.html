@@ -35,17 +35,17 @@
             <div class="row">
                 <div class="col-sm-4">
                     <div class="form-group mt-3 d-grid gap-2">
-                         <button class="btn btn-success" type="submit"> {{font_awesome.render_icon("fa-solid fa-arrows-rotate")}} Actualizar </i></button>
+                         <button class="btn btn-primary" type="submit"> {{font_awesome.render_icon("fa-solid fa-arrows-rotate")}} Actualizar </i></button>
                     </div>
                 </div>
                 <div class="col-sm-4">
                     <div class="form-group mt-3 d-grid gap-2">
-                        <a class="btn btn-warning" href="{{ url_for('reference.index') }}"> {{font_awesome.render_icon("fa-solid fa-ban")}} Cancelar </a>
+                        <a class="btn btn-primary" href="{{ url_for('reference.index') }}"> {{font_awesome.render_icon("fa-solid fa-ban")}} Cancelar </a>
                     </div>
                 </div>
                 <div class="col-sm-4">
                     <div class="form-group mt-3 d-grid gap-2">
-                        <a class="btn btn-danger" href="{{url_for('reference.delete_reference', id=ref.id)}}"> {{font_awesome.render_icon("fa-solid fa-trash")}} Eliminar </a>
+                        <a class="btn btn-primary" href="{{url_for('reference.delete_reference', id=ref.id)}}"> {{font_awesome.render_icon("fa-solid fa-trash")}} Eliminar </a>
                     </div>
                 </div>
             </div>

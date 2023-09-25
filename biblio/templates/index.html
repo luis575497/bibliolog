@@ -3,12 +3,12 @@
 {% block content %}
 
 <div class="row">
-    <div class="col-sm-4 pt-2 ">      
-        <div class="card p-3 mb-2 shadow">
+    <div class="col-sm-4 pt-2 p-4 ">      
+        <div class="card p-3 mb-4 shadow">
             <div class="row">
                 <div class="col col-lg-8">
                     <h1 class="h1">{{user.name}}</h1>
-                    <p class="h6">Referencias ({{ month }}): {{ month_ref }} </p>
+                    <p class="h6 text-disable">Referencias ({{ month }}): {{ month_ref }} </p>
                     <table class="table">
                         <thead>
                           <tr>
@@ -25,16 +25,17 @@
                             </tr>
                         </tbody>
                     </table>
-                    <a class="btn btn-warning" href="{{ url_for('login.profile', id=user.id) }}"> {{font_awesome.render_icon("fa-solid fa-user")}} Perfil</a>
+                    <a class="btn btn-primary" href="{{ url_for('login.profile', id=user.id) }}"> {{font_awesome.render_icon("fa-solid fa-user")}} Perfil</a>
                     <a class="btn btn-primary" href="{{ url_for('stats.reference_stats')}}"> {{font_awesome.render_icon("fa-solid fa-chart-simple")}} Estadísticas </a>
                 </div>
-                <div class="col-md-auto">
+                <div class="col-md d-flex align-items-start justify-content-center">
                     <img class="rounded-circle shadow" src="{{ avatars.robohash(user.email, size='100') }}">
                 </div>
             </div>
         </div>
         <form class="card p-3 shadow" method="POST" action="{{ url_for('reference.create_reference') }}">
             <div class="form-group mt-3">
+                <h4 class="text-center fw-bold mb-4">Crear una nueva referencia</h4>
                 {{ form.csrf_token }}
                 {{ form.activity.label }}
                 {{ form.activity(class='form-control')|safe }}
@@ -60,34 +61,35 @@
                 {{ form.modality(class='form-control')|safe }}
             </div>
             <div class="form-group mt-3 d-grid gap-2">
-                <button class="btn btn-success" type="submit"> {{font_awesome.render_icon("fa-solid fa-plus")}} Crear </i></button>
+                <button class="btn btn-primary" type="submit"> {{font_awesome.render_icon("fa-solid fa-plus")}} Crear </i></button>
             </div>
         </form>
     </div>
-    <div class="col-sm-8 pt-2">
+    <div class="col-sm-8 pt-2 p-4">
         <form method="POST" action="{{url_for('reference.search')}}" class="form-inline">
             <div class="column is-one-third is-offset-one-third">
                 <input class="form-control mr-sm-2 mb-4 shadow" type="text" class="input" placeholder="Buscar una referencia realizada" name="query" style="border: 0px solid #ced4da; font-size: 1.5rem;">
             </div>
         </form>
-        <table class="table shadow rounded">
+        <div class="table-responsive">
+        <table class="table shadow rounded table-hover align-middle p-3">
             <thead>
               <tr>
                 <th scope="col">#</th>
                 <th scope="col">Fecha</th>
-                <th scope="col">Actividad</th>
+                <th scope="col" class="th-sm">Actividad</th>
                 <th scope="col">Correo</th>
-                <th scope="col">Acción</th>
+                <th scope="col">Editar</th>
               </tr>
             </thead>
             <tbody id="results">
                 {% for ref in references.items %}
                   <tr>
-                    <th scope="row">{{ loop.index0 + 1}}</th>
-                    <td>{{ref.fecha}}</td> 
-                    <td>{{ref.name}}</td>
+                    <th scope="row" class="pl-2">{{ loop.index0 + 1}}</th>
+                    <td>{{ref.fecha.strftime("%m/%d")}}</td> 
+                    <td>{{ref.name[:75] if ref.name|length > 75 else ref.name}}</td>
                     <td>{{ref.email}}</td>
-                    <td><a href="{{url_for('reference.update_reference', id=ref.id)}}" class="btn btn-primary">{{font_awesome.render_icon("fa-solid fa-pen-to-square")}} Editar</a></td>
+                    <td class="d-grid gap-2"><a href="{{url_for('reference.update_reference', id=ref.id)}}" class="btn btn-primary">    {{font_awesome.render_icon("fa-solid fa-pen-to-square")}} </a></td>
                   </tr>
                 {% endfor %}
             </tbody>
@@ -105,12 +107,12 @@
                  <!-- Busque la página activa y establezca el enlace en "Activo"-->
                     {% if references.page == page_num %}
                     <a href="{{ url_for('reference.index', page=page_num) }}"
-                    class="btn btn-dark">
+                    class="btn btn-primary">
                         {{ page_num }}
                     </a>
                     {% else %}
                     <a href="{{ url_for('reference.index', page=page_num) }}"
-                    class="btn btn-outline-dark">
+                    class="btn btn-outline-primary">
                         {{ page_num }}
                     </a>
                     {% endif %}
@@ -128,6 +130,7 @@
         Página {{ references.page }} de {{ references.pages }}
         </p>
         
+    </div>
     </div>
 </div>
 {% endblock %}

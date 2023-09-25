@@ -55,6 +55,6 @@ class ProfileForm(FlaskForm):
                              ('chistorico', 'Campus Centro Histórico')]) 
     
 class StatsDateForm(FlaskForm):
-    end_date = DateField('Fecha', default=datetime.today, validators=[InputRequired ()])
-    start_date = DateField('Fecha', validators=[InputRequired ()])
+    end_date = DateField('Hasta', default=datetime.today, validators=[InputRequired ()])
+    start_date = DateField('Desde', validators=[InputRequired ()])
     submit = SubmitField('Buscar')

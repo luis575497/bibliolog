@@ -13,6 +13,11 @@
   <!-- FontAwesome -->
   {{ font_awesome.load_js() }}
 
+  <!-- FontPoppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
    <!-- HTMX -->
   <script src="https://unpkg.com/htmx.org@1.9.5"></script>
   <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
@@ -31,9 +36,9 @@
     {% with messages = get_flashed_messages() %}
       {% if messages %}
         {% for message in messages %}
-          <div  class="alert alert-primary alert-dismissible fade show" role="alert">
-            <h4 class="alert-heading">Notificaciones</h4>
-            <p>{{ message }}</p>
+          <div  class="alert alert-primary d-flex align-items-center alert-dismissible fade show" role="alert">
+            {{font_awesome.render_icon("fa-solid fa-circle-info fa-2xl bi flex-shrink-0 me-2")}}
+            <div>{{ message }}</div>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
           </div>
           

@@ -72,5 +72,5 @@ def export_report(start,end):
         return Response(output, mimetype="text/csv", headers={"Content-Disposition":"attachment;filename=reference_report.csv"})
     except:
         flash("No se pudo crear el archivo CSV")
-
+    
     return redirect(url_for('stats.reference_stats'))

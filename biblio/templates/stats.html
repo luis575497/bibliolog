@@ -1,20 +1,32 @@
 {% extends "base.html" %}
 
 {% block content %}
+{% if graph_modalidad %}
+<div class="row">
+    <div class="col col-sm-6">
+
+    </div>
+    <div class="col col-sm-6">
+        <h2 class="text-disable text-center mb-3 ">Referencias totales: <span style="color: #191E2E;">{{total_reference}}</span></h2>
+    </div>
+</div>
+{% endif %}
 <div class="row">
     <div class="col-sm-6">
         <form class="card p-3 shadow p-4" method="POST" action="{{ url_for('stats.reference_stats') }}">
             <h3 class="mb-4"> Seleccione el período de búsqueda </h3>
             <div class="row">
                 <div class="col-sm-6">
-                    <div class="form-group mt-3">
+                    <div class="form-group mt-1">
                         {{ form.csrf_token }}
+                        {{ form.start_date.label(class='h5') }}
                         {{ form.start_date(class='form-control')|safe }}
                     </div>
                 </div>
                 <div class="col-sm-6">
-                    <div class="form-group mt-3">
+                    <div class="form-group mt-1">
                         {{ form.csrf_token }}
+                        {{ form.end_date.label(class='h5') }}
                         {{ form.end_date(class='form-control')|safe }}
                     </div>
                 </div>
@@ -22,7 +34,7 @@
             
             <div class="row mt-3">
                 <div class="form-group mt-3 col-sm-4 d-grid gap-2">
-                    <button class="btn btn-success" type="submit"> {{font_awesome.render_icon("fa-solid fa-magnifying-glass")}} Buscar </button>
+                    <button class="btn btn-primary" type="submit"> {{font_awesome.render_icon("fa-solid fa-magnifying-glass")}} Buscar </button>
                 </div>
                 <div class="form-group mt-3 col-sm-4 d-grid gap-2">
                     {% if exportar %}
@@ -32,92 +44,109 @@
             </div>  
         </form>    
     </div>
-    
+
     <div class="col-sm-3">
-        <div class="card-dash shadow" style="width: 18rem; background-color: #16A596; color: #fff;">    
+        <div class="card-dash shadow" style="width: 16rem;">    
             <div class="card-body row">
                 <div class="col-sm-8">
-                    <h5>Estudiantes</h5>
+                    <h5 class="text-disable">Estudiantes</h5>
                     {% if estudiantes %}
                     <h2> {{estudiantes}} </h2>
                     {% else %}
                     <h2> 0 </h2>
                     {% endif %}
                 </div>
-                <div class="col-sm-4">
-                     <p>{{font_awesome.render_icon("fa-solid fa-graduation-cap fa-2xl")}}</p>
+                <div class="col-sm-4 d-flex justify-content-center" style="color: #83C4C6;">
+                    <div class="d-flex align-items-center p-2 rounded mt-2 mb-2" style="background-color: #EFF8F9">
+                        {{font_awesome.render_icon("fa-solid fa-graduation-cap fa-2xl")}}
+                    </div>
+                     
                 </div>
-            <hr>
+            <hr class="hr-dashboard-green">
             </div>
         </div>
         
-        <div class="card-dash shadow mt-2" style="width: 18rem; background-color: #F3C623; color: #fff;">    
+        <div class="card-dash shadow mt-2" style="width: 16rem;"> 
             <div class="card-body row">
                 <div class="col-sm-8">
-                    <h5>Administrativos</h5>
+                    <h5 class="text-disable">Administrativos</h5>
                     {% if administrativos %}
                     <h2> {{administrativos}} </h2>
                     {% else %}
                     <h2> 0 </h2>
                     {% endif %}
                 </div>
-                <div class="col-sm-4">
-                     <p>{{font_awesome.render_icon("fa-solid fa-user-tie fa-2xl")}}</p>
+                <div class="col-sm-4 d-flex justify-content-center" style="color: #213580;">
+                    <div class="d-flex align-items-center p-2 rounded mt-2 mb-2" style="background-color: #EDEEFA">
+                        {{font_awesome.render_icon("fa-solid fa-user-tie fa-2xl")}}
+                    </div>                     
                 </div>
-            <hr>
+            <hr class="hr-dashboard-blue">
             </div>
         </div>
 
-    </div>
-
+    </div>        
+    
     <div class="col-sm-2">
-        <div class="card-dash shadow" style="width: 18rem; background-color: #213555; color: #fff;">    
+        <div class="card-dash shadow" style="width: 16rem;">    
             <div class="card-body row">
                 <div class="col-sm-8">
-                    <h5>Docentes</h5>
+                    <h5 class="text-disable">Docentes</h5>
                     {% if docentes %}
                     <h2> {{docentes}} </h2>
                     {% else %}
                     <h2> 0 </h2>
                     {% endif %}
                 </div>
-                <div class="col-sm-4">
-                     <p>{{font_awesome.render_icon("fa-solid fa-chalkboard-user fa-2xl")}}</p>
-                </div>
-            <hr>
+                <div class="col-sm-4 d-flex justify-content-center" style="color: #213580;">
+                    <div class="d-flex align-items-center p-2 rounded mt-2 mb-2" style="background-color: #EDEEFA">
+                        {{font_awesome.render_icon("fa-solid fa-chalkboard-user fa-2xl")}}
+                    </div>
+                </div>       
+            <hr class="hr-dashboard-blue">
             </div>
         </div>
-        <div class="card-dash shadow mt-2" style="width: 18rem; background-color: #F73F52; color: #fff;">    
+        <div class="card-dash shadow mt-2" style="width: 16rem;">    
             <div class="card-body row">
                 <div class="col-sm-8">
-                    <h5>Público Externo</h5>
+                    <h5 class="text-disable">Público Ext.</h5>
                     {% if externos %}
                     <h2> {{externos}} </h2>
                     {% else %}
                     <h2> 0 </h2>
                     {% endif %}
                 </div>
-                <div class="col-sm-4">
-                     <p>{{font_awesome.render_icon("fa-solid fa-tree-city fa-2xl")}}</p>
+                <div class="col-sm-4 d-flex justify-content-center" style="color: #6F9EF3;"> 
+                    <div class="d-flex align-items-center p-2 rounded mt-2 mb-2" style="background-color: #F0F6FD">
+                        {{font_awesome.render_icon("fa-solid fa-tree-city fa-2xl")}}
+                    </div>
                 </div>
-            <hr>
+            <hr class="hr-dashboard-blue-light">
             </div>
         </div>
     </div>
 </div>
+
 {% if graph_modalidad %}
 <div class="row">
-    <h2>Total de referencias realizadas: {{total_reference}} </h2>
+    
     <div class="row mt-3">
         <div style="width:47vw" class="col-sm-6">
-            <canvas id="line-plot"></canvas>
+            <div class="card p-3 shadow">
+                <h4 class="mb-5 text-disable">Refencias realizadas por días</h2>
+                <canvas id="line-plot"> </canvas>
+            </div>
+
         </div>
         <div style="width:47vw" class="col-sm-6">
-            <canvas id="bar-plot"></canvas>
-        </div>
-
+            <div class="card p-3 shadow">
+                <h4 class="mb-5 text-disable">Modalidad de las referencias</h2>
+                    <canvas id="bar-plot"></canvas>
+                </canvas>
+            </div>
     </div>
 </div>
+
 
 
 <script>
@@ -132,25 +161,28 @@
             {% endfor %}
         ],
         datasets: [{
-            label: 'Modalidad',
+            label: 'Modalidad de las referencias realizadas',
             data: [
                 {% for item in graph_modalidad["data"] %}
                 "{{ item }}",
                 {% endfor %}
             ],
             backgroundColor: [
-                'rgba(247, 63, 82, 0.8)',
-                'rgba(54, 162, 235, 0.2)',
+                'rgba(75,88,213, 0.8)',
+                'rgba(25,30,46, 0.8)',
             ],
             borderColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
+                'rgba(75,88,213, 1)',
+                'rgba(25,30,46, 1)',
 
             ],
             borderWidth: 1
         }]
     },
     options: {
+        plugins:{
+            legend: false
+        },
         scales: {
             y: {
                 beginAtZero: true
@@ -158,6 +190,7 @@
         }
     }
     });
+    
 </script>
 <script>
     // <!-- Grafico de lineas -->
@@ -172,14 +205,14 @@
                 {% endfor %}
             ],
             datasets: [{
-                label: 'My First Dataset',
+                label: '',
                 data: [
                     {% for day, count in data_line_chart.items() %}
                         "{{ count }}",
                     {% endfor %}
                 ],
                 fill: false,
-                borderColor: 'rgb(75, 192, 192)',
+                borderColor: 'rgb(25,30,46)',
                 tension: 0.1
                 }]
             }
