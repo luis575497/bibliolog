@@ -5,9 +5,9 @@ from flask_mailing import Message
 from datetime import datetime, timedelta
 import calendar
 
-from .extensions import db, mail
-from . import models
-from .forms import Reference
+from ..extensions import db, mail
+from ..models import models
+from ..forms.referenceform import ReferenceForm
 
 reference = Blueprint("reference", __name__)
 
@@ -15,7 +15,7 @@ reference = Blueprint("reference", __name__)
 @login_required
 def index():
     if request.method == "GET":
-        form_reference = Reference()
+        form_reference = ReferenceForm()
         page = request.args.get('page', 1, type=int)
         references = models.Reference.query.filter( (models.Reference.fecha > datetime.now()) - timedelta(days=30) ).filter(models.Reference.user_id == current_user.id).order_by(models.Reference.fecha.desc()).paginate(page=page, per_page=15)
         month_ref = models.Reference.query.filter( (models.Reference.fecha > datetime.now()) - timedelta(days=30) ).filter(models.Reference.user_id == current_user.id).count()
@@ -38,7 +38,7 @@ def index():
 @reference.route("/reference/", methods=["GET" , "POST"])
 @login_required
 async def create_reference():
-    form_reference = Reference()
+    form_reference = ReferenceForm()
     if request.method == "POST" and form_reference.validate():
         bibliotecario = current_user.id
         new_reference =  models.Reference(
@@ -81,10 +81,10 @@ async def create_reference():
 @reference.route("/reference_update/<id>", methods=["GET" , "POST"])
 @login_required
 def update_reference(id):  
-    form_reference = Reference()
+    form_reference = ReferenceForm()
     
     if request.method == "GET":
-        form_reference = Reference()
+        form_reference = ReferenceForm()
         reference = models.Reference.query.get(id)
         form_reference.modality.default = reference.modality
         form_reference.user_type.default = reference.user_type

@@ -1,12 +1,11 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectField, DateField, PasswordField
+from wtforms import StringField, SubmitField, SelectField, DateField
 from wtforms.validators import Email, InputRequired 
 from wtforms.widgets import TextArea
-from . import font_awesome
 
 from datetime import datetime
 
-class Reference(FlaskForm):
+class ReferenceForm(FlaskForm):
     activity = SelectField(u'Actividad realizada', choices=
                             [('Asesoría para registrar publicaciones científicas', 'Asesoría para registrar publicaciones científicas'),
                              ('Asesoría en el uso de equipos: escáner, computadoras, pantallas  cubículos y proyector mediateca', 'Asesoría en el uso de equipos: escáner, computadoras, pantallas  cubículos y proyector mediateca'),
@@ -30,31 +29,3 @@ class Reference(FlaskForm):
     modality = SelectField(u'Modalidad', choices=
                             [('presencial', 'Presencial'), 
                              ('virtual', 'Virtual'),]) 
-    
-class LoginForm(FlaskForm):
-    username = StringField(u'Correo electrónico', validators=[InputRequired ()], render_kw={"placeholder": "Correo electrónico"})
-    password = PasswordField("Password", validators=[InputRequired ()], render_kw={"placeholder": "Password"})
-    name = StringField(u'Nombres y apellidos', validators=[InputRequired ()], render_kw={"placeholder": "Nombres y apellidos"})
-    submit = SubmitField('Ingresar')
-    register = SubmitField('Registrarse')
-    campus = SelectField(u'Campus', choices=
-                            [('central', 'Campus Central'), 
-                             ('paraiso', 'Campus Paraíso'), 
-                             ('yanuncay', 'Campus Yanuncay'),
-                             ('historico', 'Campus Centro Histórico')]) 
-    
-class ProfileForm(FlaskForm):
-    username = StringField(u'Correo electrónico', validators=[InputRequired ()])
-    password = PasswordField("Password")
-    name = StringField(u'Nombres y apellidos', validators=[InputRequired ()])
-    submit = SubmitField('Ingresar')
-    campus = SelectField(u'Campus', choices=
-                            [('central', 'Campus Central'), 
-                             ('paraiso', 'Campus Paraíso'), 
-                             ('yanuncay', 'Campus Yanuncay'),
-                             ('chistorico', 'Campus Centro Histórico')]) 
-    
-class StatsDateForm(FlaskForm):
-    end_date = DateField('Hasta', default=datetime.today, validators=[InputRequired ()])
-    start_date = DateField('Desde', validators=[InputRequired ()])
-    submit = SubmitField('Buscar')

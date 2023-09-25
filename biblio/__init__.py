@@ -2,9 +2,9 @@ from flask import Flask
 from flask_bcrypt import Bcrypt
 
 from .extensions import db, login_manager, bcrypt, avatars, font_awesome, admin, mail
-from .reference import reference
-from .auth import login
-from .stats import stats
+from .routes.reference import reference
+from .routes.auth import login
+from .routes.stats import stats
 
 import os
 
@@ -50,7 +50,7 @@ def create_app(test_config=None):
     mail.init_app(app)
 
     #Crear tablas
-    from . import models
+    from .models import models
     with app.app_context():
         db.create_all()
 

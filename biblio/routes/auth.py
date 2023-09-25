@@ -1,9 +1,10 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import logout_user, login_user, login_required
 
-from . import login_manager, bcrypt, db
-from .models import User, Campus
-from .forms import LoginForm, ProfileForm
+from .. import login_manager, bcrypt, db
+from ..models.models import User, Campus
+from ..forms.loginform import LoginForm
+from ..forms.profileform import ProfileForm
 
 
 login = Blueprint("login", __name__)

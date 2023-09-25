@@ -1,10 +1,9 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash, Response
 from flask_login import login_required, current_user
-from .forms import StatsDateForm
+from ..forms.statsdateform import StatsDateForm
 
-from .models import Reference
-from datetime import datetime, timedelta
-from . import db
+from ..models.models import Reference
+from .. import db
 
 from io import StringIO
 import csv
