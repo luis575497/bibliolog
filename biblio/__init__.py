@@ -1,7 +1,7 @@
 from flask import Flask
 import flask_monitoringdashboard as dashboard
 
-from .extensions import db, login_manager, bcrypt, avatars, font_awesome, admin, mail, swagger
+from .extensions import db, login_manager, bcrypt, avatars, font_awesome, admin, mail
 from .routes.reference import reference
 from .routes.auth import login
 from .routes.stats import stats
