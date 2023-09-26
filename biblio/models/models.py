@@ -2,7 +2,7 @@ from flask_login import UserMixin
 from flask_admin.contrib.sqla import ModelView
 
 from ..extensions import admin
-from ..extensions import db
+from ..extensions import db, bcrypt
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -38,6 +38,14 @@ class Reference(db.Model):
 
 class UserView(ModelView):
     column_hide_backrefs = False
+    forms_columns = ["name","email","password","references","campus_id"]
 
-admin.add_view(ModelView(User, db.session))
+    #Cambiar la contraseña desde el panel de administrador
+    def on_model_change(self, form, model, is_created):
+        print("Cambiando contraseña del usuarios")
+        model.password = bcrypt.generate_password_hash(form.password.data) 
+
+admin.add_view(UserView(User, db.session))
 admin.add_view(ModelView(Campus, db.session))
+
+

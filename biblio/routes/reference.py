@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import current_user, login_required
 from flask_mailing import Message
+from werkzeug.wrappers import Response
 
 from datetime import datetime, timedelta
 import calendar
@@ -35,10 +36,20 @@ def index():
         }
         return render_template("index.html" , **context)
 
-@reference.route("/reference/", methods=["GET" , "POST"])
+@reference.route("/reference/", methods=["POST"])
 @login_required
-async def create_reference():
+async def create_reference() -> Response:
+    """Crear una referencia
+    ---
+
+    description: Cuando se envía una petición POST hacia la ruta ``/reference/`` se envían los datos necesarios para crear un objeto de tipo Reference en la base de datos.
+    responses:
+        200:
+            description: Renderizado de la plantilla ``index.html`` con los datos obtenidos previamente
+
+    """
     form_reference = ReferenceForm()
+
     if request.method == "POST" and form_reference.validate():
         bibliotecario = current_user.id
         new_reference =  models.Reference(
@@ -50,11 +61,8 @@ async def create_reference():
             modality = form_reference.modality.data,
             user_id= bibliotecario,
             )
-
-        db.session.add(new_reference)
-        db.session.commit()
-        flash("Referencia creada correctamente, enviado correo electrónico al usuario")
-
+        
+        # Enviar mensaje al usuario sobre la referencia realizada
         msg = Message(
               subject="Evaluación de Atención en la Biblioteca Ucuenca",
               sender="biblioteca@ucuenca.edu.ec",
@@ -73,12 +81,14 @@ async def create_reference():
                 subtype="html")
         
         await mail.send_message(msg)
-
+        db.session.add(new_reference)
+        db.session.commit()
+        flash("Referencia creada correctamente, enviado correo electrónico al usuario")
         return redirect(url_for('reference.index'))
 
     return redirect(url_for('reference.index'))
 
-@reference.route("/reference_update/<id>", methods=["GET" , "POST"])
+@reference.route("/reference/<id>/update", methods=["GET" , "POST"])
 @login_required
 def update_reference(id):  
     form_reference = ReferenceForm()
@@ -110,24 +120,20 @@ def update_reference(id):
         return redirect(url_for('reference.index'))
 
     
-@reference.route("/reference_delete/<id>", methods=["GET" , "POST"])
+@reference.route("/reference/<id>/delete", methods=["GET" , "POST"])
 @login_required
 def delete_reference(id):
     if request.method == "GET":
         ref= models.Reference.query.get(id)
         db.session.delete(ref)
         db.session.commit()
-        
         flash("Referencia eliminada")
-
         return redirect(url_for('reference.index'))
     
 @reference.route("/search", methods=["GET" , "POST"])
 @login_required
 def search():
     query = request.form.get("query")
-    print(query)
-
     if query:
         results = models.Reference.query.filter(models.Reference.user_id == current_user.id) \
             .filter(models.Reference.email.icontains(query) | models.Reference.details.icontains(query)) \

@@ -8,11 +8,11 @@ from datetime import datetime
 class ReferenceForm(FlaskForm):
     activity = SelectField(u'Actividad realizada', choices=
                             [('Asesoría para registrar publicaciones científicas', 'Asesoría para registrar publicaciones científicas'),
-                             ('Asesoría en el uso de equipos: escáner, computadoras, pantallas  cubículos y proyector mediateca', 'Asesoría en el uso de equipos: escáner, computadoras, pantallas  cubículos y proyector mediateca'),
-                             ("Asesoría sobre trabajos de titulación: formato, acceso restringido, cambios de archivo","Asesoría sobre trabajos de titulación: formato, acceso restringido, cambios de archivo"),
-                             ("Búsqueda de documentos en: repositorio, catálogo, bases digitales y estanterías","Búsqueda de documentos en: repositorio, catálogo, bases digitales y estanterías"),
-                             ("Asesoría en el Sistema de Control de Similitudes: ingreso, creación de cuentas, eliminación y otros","Asesoría en el Sistema de Control de Similitudes: ingreso, creación de cuentas, eliminación y otros"),
-                             ("Asesoría en el uso de los recursos digitales: bases, catálogo, repositorio, gestores, biblioteca","Asesoría en el uso de los recursos digitales: bases, catálogo, repositorio, gestores, biblioteca"),
+                             ('Asesoría en el uso de equipos', 'Asesoría en el uso de equipos'),
+                             ("Asesoría sobre publicación de trabajos de titulación","Asesoría sobre publicación de trabajos de titulació"),
+                             ("Búsqueda de documentos en recursos digitales y estanterías","Búsqueda de documentos en recursos digitales y estanterías"),
+                             ("Asesoría en el Sistema de Control de Similitudes","Asesoría en el Sistema de Control de Similitude"),
+                             ("Asesoría en el uso de los recursos digitales","Asesoría en el uso de los recursos digitales"),
                              ("Emisión de certificado de 60 horas","Emisión de certificado de 60 horas"),
                              ("Orientación para emisión de certificados de no adeudar","Orientación para emisión de certificados de no adeudar"),
                              ("Referencia especializada","Referencia especializada"),])

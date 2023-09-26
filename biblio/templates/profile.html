@@ -5,7 +5,7 @@
     <div class="row justify-content-center shadow mt-3 mb-3 pt-5 pb-5 rounded" style="background-color: #fff;">
 
             <div class="col col-sm-8 ">
-                <form class="p-3 border-left" method="POST" action="{{ url_for('login.profile', id=user.id) }}">
+                <form class="p-3 border-left" method="POST" action="{{ url_for('login.update_profile', id=user.id) }}">
                     <h1 class="mb-4"> Perfil de usuario</h1>
                     <div class="form-group mt-3">
                         {{ form.csrf_token }}

@@ -1,7 +1,7 @@
 from flask import Flask
-from flask_bcrypt import Bcrypt
+import flask_monitoringdashboard as dashboard
 
-from .extensions import db, login_manager, bcrypt, avatars, font_awesome, admin, mail
+from .extensions import db, login_manager, bcrypt, avatars, font_awesome, admin, mail, swagger
 from .routes.reference import reference
 from .routes.auth import login
 from .routes.stats import stats
@@ -14,6 +14,7 @@ def create_app(test_config=None):
     app.config.from_mapping(
         SECRET_KEY='anything-hard-to-guess',
         SQLALCHEMY_DATABASE_URI= "sqlite:///db.sqlite3",
+        FLASK_ADMIN_SWATCH = 'cerulean',
         MAIL_SERVER = 'smtp.gmail.com',
         MAIL_PORT = 587,
         MAIL_USERNAME = 'biblioteca@ucuenca.edu.ec',
@@ -48,6 +49,9 @@ def create_app(test_config=None):
 
     #Iniciar Flask-Mail
     mail.init_app(app)
+
+    # Iniciar Flask Admin Dashboard
+    dashboard.bind(app)
 
     #Crear tablas
     from .models import models

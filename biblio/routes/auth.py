@@ -39,10 +39,10 @@ def login_biblio():
             flash("El correo proporcionado no existe en la base de datos")
             return redirect(url_for('login.login_biblio'))
 
+
 @login.route("/register", methods=["GET" , "POST"])
 def register():
     register_form = LoginForm()
-
 
     if request.method == "POST":
         if User.query.filter_by(email=register_form.username.data).first():
@@ -68,7 +68,7 @@ def unauthorized_callback():
     return redirect(url_for('login.login_biblio'))
 
 # Editar el perfil del usuario    
-@login.route("/user/<id>", methods=["GET" , "POST"])
+@login.route("/user/<id>", methods=["GET"])
 @login_required
 def profile(id):
     profile_form = ProfileForm()
@@ -81,6 +81,13 @@ def profile(id):
         profile_form.process()
 
         return render_template("profile.html", form=profile_form, user=user)
+    
+   
+
+@login.route("/user/<id>/update_profile", methods=["GET" , "POST"])
+@login_required
+def update_profile(id):
+    profile_form = ProfileForm()
     
     if request.method == "POST":
         user = User.query.get(id)

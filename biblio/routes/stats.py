@@ -49,7 +49,7 @@ def reference_stats():
         }
         return render_template("stats.html", **context)
     
-@stats.route("/export_report/<string:start>/<string:end>", methods=["GET" , "POST"])
+@stats.route("/reference_stats/report/<string:start>/<string:end>", methods=["GET" , "POST"])
 @login_required
 def export_report(start,end):
     references = Reference.query.filter(Reference.user_id == current_user.id).filter(Reference.fecha >= start, Reference.fecha <= end).order_by(Reference.fecha.desc()).all()
