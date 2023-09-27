@@ -71,8 +71,10 @@
                 <input class="form-control mr-sm-2 mb-4 shadow" type="text" class="input" placeholder="Buscar una referencia realizada" name="query" style="border: 0px solid #ced4da; font-size: 1.5rem;">
             </div>
         </form>
-        <div class="table-responsive">
-        <table class="table shadow rounded table-hover align-middle p-3">
+        <div class="table-responsive shadow rounded card mb-4">  
+        <h4 class="text-center mb-4 mt-4"> Referencias realizadas en el mes</h4>
+        <table class="table table-hover align-middle p-3">
+            
             <thead>
               <tr>
                 <th scope="col">#</th>
@@ -94,6 +96,7 @@
                 {% endfor %}
             </tbody>
           </table>
+        </div>
           <!-- Links de paginación de la tabla-->
           <div class="text-right">
             <a href="{{ url_for('reference.index', page=references.prev_num) }}"
@@ -130,7 +133,7 @@
         Página {{ references.page }} de {{ references.pages }}
         </p>
         
-    </div>
+    
     </div>
 </div>
 {% endblock %}

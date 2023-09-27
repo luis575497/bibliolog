@@ -5,6 +5,7 @@ from flask_avatars import Avatars
 from flask_font_awesome import FontAwesome
 from flask_admin import Admin
 from flask_mailing import Mail
+from flask_debugtoolbar import DebugToolbarExtension
 
 
 db = SQLAlchemy()
@@ -14,3 +15,4 @@ avatars= Avatars()
 font_awesome = FontAwesome()
 admin = Admin()
 mail = Mail()
+toolbar = DebugToolbarExtension()

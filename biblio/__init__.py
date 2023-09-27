@@ -1,7 +1,6 @@
 from flask import Flask
-import flask_monitoringdashboard as dashboard
 
-from .extensions import db, login_manager, bcrypt, avatars, font_awesome, admin, mail
+from .extensions import db, login_manager, bcrypt, avatars, font_awesome, admin, mail, toolbar
 from .routes.reference import reference
 from .routes.auth import login
 from .routes.stats import stats
@@ -11,17 +10,7 @@ import os
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
-    app.config.from_mapping(
-        SECRET_KEY='anything-hard-to-guess',
-        SQLALCHEMY_DATABASE_URI= "sqlite:///db.sqlite3",
-        FLASK_ADMIN_SWATCH = 'cerulean',
-        MAIL_SERVER = 'smtp.gmail.com',
-        MAIL_PORT = 587,
-        MAIL_USERNAME = 'biblioteca@ucuenca.edu.ec',
-        MAIL_PASSWORD = 'zgjinssdybxlneot',
-        MAIL_USE_TLS = True,
-        MAIL_USE_SSL = False,
-    )
+    app.config.from_pyfile("config.py")
 
     # ensure the instance folder exists
     try:
@@ -50,8 +39,8 @@ def create_app(test_config=None):
     #Iniciar Flask-Mail
     mail.init_app(app)
 
-    # Iniciar Flask Admin Dashboard
-    dashboard.bind(app)
+    #Toolbar Debug
+    toolbar.init_app(app)
 
     #Crear tablas
     from .models import models

@@ -1,3 +1,17 @@
+"""
+Submódulo de Referencias (routes)
+=====================================
+
+Este módulo contiene todas las rutas definidas para manejar las operaciones con las referencias. 
+Contiene funciones para:
+
+- Crear una referencia en la base de datos
+- Editar una referencia de la base de datos
+- Eliminar una referencia de la base de datos
+- Buscar referencias en la base de datos
+
+"""
+
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import current_user, login_required
 from flask_mailing import Message
@@ -12,47 +26,6 @@ from ..forms.referenceform import ReferenceForm
 
 reference = Blueprint("reference", __name__)
 
-@reference.route("/", methods=["GET" , "POST"])
-@login_required
-def index() -> str:
-    """
-    Renderizado del template index
-
-    Cuando se envía una petición POST hacia la ruta raiz ``/`` se buscan los datos sobre formulario
-    del buscado y un listado de los últimos referencias en plazo de 30 díasen la base de datos y posteriormente
-    se renderiza el template ``index.html``.
-
-    Returns
-    -------
-    str
-        Renderizado del template ``index.html`` mediante platillas Jinja2
-
-    Notes
-    -----
-    Para ejecutar esta ruta se requiere que el usuario se encuentra autenticado en el sistema
-
-    """
-    if request.method == "GET":
-        form_reference = ReferenceForm()
-        page = request.args.get('page', 1, type=int)
-        references = models.Reference.query.filter( (models.Reference.fecha > datetime.now()) - timedelta(days=30) ).filter(models.Reference.user_id == current_user.id).order_by(models.Reference.fecha.desc()).paginate(page=page, per_page=15)
-        month_ref = models.Reference.query.filter( (models.Reference.fecha > datetime.now()) - timedelta(days=30) ).filter(models.Reference.user_id == current_user.id).count()
-        count_user_est = models.Reference.query.filter( (models.Reference.fecha > datetime.now()) - timedelta(days=30) ).filter(models.Reference.user_id == current_user.id).filter(models.Reference.user_type == "estudiantes").count()
-        count_user_doc = models.Reference.query.filter( (models.Reference.fecha > datetime.now()) - timedelta(days=30) ).filter(models.Reference.user_id == current_user.id).filter(models.Reference.user_type == "docente-investigador").count()
-        count_user_pub = models.Reference.query.filter( (models.Reference.fecha > datetime.now()) - timedelta(days=30) ).filter(models.Reference.user_id == current_user.id).filter(models.Reference.user_type == "general").count()
-        
-        context ={
-            "form": form_reference, 
-            "references": references, 
-            "user": current_user,
-            "month_ref": month_ref,
-            "count_user_est": count_user_est,
-            "count_user_doc": count_user_doc,
-            "count_user_pub": count_user_pub,
-            "month": calendar.month_name[ datetime.now().month]
-        }
-        return render_template("index.html" , **context)
-
 @reference.route("/reference/", methods=["POST"])
 @login_required
 async def create_reference() -> Response:
@@ -65,7 +38,7 @@ async def create_reference() -> Response:
     Returns
     -------
     Response
-        Renderizado de la plantilla ``index.html`` con los datos obtenidos previamente
+        Redirección a la funcion ``reference.index()``
 
     Notes
     -----
@@ -113,7 +86,27 @@ async def create_reference() -> Response:
 
 @reference.route("/reference/<id>/update", methods=["GET" , "POST"])
 @login_required
-def update_reference(id):  
+def update_reference(id: int) -> Response:
+    """
+    Actualizar una referencia
+
+    Cuando se envía una petición GET hacia la ruta ``/reference/<id>/update`` se obtienen los datos necesarios para renderizar el archivo ``reference_update.html`` con los datos de la re
+    referencia enviados. Cuando se realiza un petición POST hacia esta ruta se obtienen los datos del formulario y se actualiza los datos de la referencia en la base de datos. 
+
+    Parameters
+    ----------
+    id: int
+        Identificador único de la referencia en la base de datos
+
+    Returns
+    -------
+    Response
+        En caso del método GET se renderiza el template ```reference_update.html` y en el método POST se redirige a la funcion ``reference.index()``
+
+    Notes
+    -----
+    Para ejecutar esta ruta se requiere que el usuario se encuentra autenticado en el sistema
+    """  
     form_reference = ReferenceForm()
     
     if request.method == "GET":
@@ -145,7 +138,26 @@ def update_reference(id):
     
 @reference.route("/reference/<id>/delete", methods=["GET" , "POST"])
 @login_required
-def delete_reference(id):
+def delete_reference(id: int) -> Response:
+    """
+    Eliminar una referencia
+
+    Cuando se envía una petición GET hacia la ruta ``/reference/<id>/delete`` se elimina la referencia usando el identificador de este en la base de datos. 
+
+    Parameters
+    ----------
+    id: int
+        Identificador único de la referencia en la base de datos
+
+    Returns
+    -------
+    Response
+        Redirección a la funcion ``reference.index()``
+
+    Notes
+    -----
+    Para ejecutar esta ruta se requiere que el usuario se encuentra autenticado en el sistema
+    """  
     if request.method == "GET":
         ref= models.Reference.query.get(id)
         db.session.delete(ref)
@@ -155,7 +167,22 @@ def delete_reference(id):
     
 @reference.route("/search", methods=["GET" , "POST"])
 @login_required
-def search():
+def search() -> str:
+    """
+    Buscar referencias
+
+    Cuando se envía una petición GET hacia la ruta ``/search`` se buscan en la base de datos todos las referencias que coincidan
+    con la consulta en los campos de email y details de las referencias en la base de datos. 
+
+    Returns
+    -------
+    str
+        Renderizado de la plantilla ``index.html`` con los datos obtenidos previamente
+
+    Notes
+    -----
+    Para ejecutar esta ruta se requiere que el usuario se encuentra autenticado en el sistema
+    """ 
     query = request.form.get("query")
     if query:
         results = models.Reference.query.filter(models.Reference.user_id == current_user.id) \

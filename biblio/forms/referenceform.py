@@ -9,9 +9,9 @@ class ReferenceForm(FlaskForm):
     activity = SelectField(u'Actividad realizada', choices=
                             [('Asesoría para registrar publicaciones científicas', 'Asesoría para registrar publicaciones científicas'),
                              ('Asesoría en el uso de equipos', 'Asesoría en el uso de equipos'),
-                             ("Asesoría sobre publicación de trabajos de titulación","Asesoría sobre publicación de trabajos de titulació"),
+                             ("Asesoría sobre publicación de trabajos de titulación","Asesoría sobre publicación de trabajos de titulación"),
                              ("Búsqueda de documentos en recursos digitales y estanterías","Búsqueda de documentos en recursos digitales y estanterías"),
-                             ("Asesoría en el Sistema de Control de Similitudes","Asesoría en el Sistema de Control de Similitude"),
+                             ("Asesoría en el Sistema de Control de Similitudes","Asesoría en el Sistema de Control de Similitudes"),
                              ("Asesoría en el uso de los recursos digitales","Asesoría en el uso de los recursos digitales"),
                              ("Emisión de certificado de 60 horas","Emisión de certificado de 60 horas"),
                              ("Orientación para emisión de certificados de no adeudar","Orientación para emisión de certificados de no adeudar"),
