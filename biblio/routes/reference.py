@@ -1,17 +1,3 @@
-"""
-Submódulo de Referencias (routes)
-=====================================
-
-Este módulo contiene todas las rutas definidas para manejar las operaciones con las referencias. 
-Contiene funciones para:
-
-- Crear una referencia en la base de datos
-- Editar una referencia de la base de datos
-- Eliminar una referencia de la base de datos
-- Buscar referencias en la base de datos
-
-"""
-
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import current_user, login_required
 from flask_mailing import Message
@@ -31,18 +17,8 @@ reference = Blueprint("reference", __name__)
 async def create_reference() -> Response:
     """
     Crear una referencia
-
     Cuando se envía una petición POST hacia la ruta ``/reference/`` se envían los datos necesarios para crear un objeto de tipo Reference en la base de datos.
     Y se envía un correo electrónico al email recuperado del formulario
-
-    Returns
-    -------
-    Response
-        Redirección a la funcion ``reference.index()``
-
-    Notes
-    -----
-    Para ejecutar esta ruta se requiere que el usuario se encuentra autenticado en el sistema
     """
     form_reference = ReferenceForm()
 
@@ -89,23 +65,8 @@ async def create_reference() -> Response:
 def update_reference(id: int) -> Response:
     """
     Actualizar una referencia
-
     Cuando se envía una petición GET hacia la ruta ``/reference/<id>/update`` se obtienen los datos necesarios para renderizar el archivo ``reference_update.html`` con los datos de la re
     referencia enviados. Cuando se realiza un petición POST hacia esta ruta se obtienen los datos del formulario y se actualiza los datos de la referencia en la base de datos. 
-
-    Parameters
-    ----------
-    id: int
-        Identificador único de la referencia en la base de datos
-
-    Returns
-    -------
-    Response
-        En caso del método GET se renderiza el template ```reference_update.html` y en el método POST se redirige a la funcion ``reference.index()``
-
-    Notes
-    -----
-    Para ejecutar esta ruta se requiere que el usuario se encuentra autenticado en el sistema
     """  
     form_reference = ReferenceForm()
     
@@ -141,22 +102,7 @@ def update_reference(id: int) -> Response:
 def delete_reference(id: int) -> Response:
     """
     Eliminar una referencia
-
     Cuando se envía una petición GET hacia la ruta ``/reference/<id>/delete`` se elimina la referencia usando el identificador de este en la base de datos. 
-
-    Parameters
-    ----------
-    id: int
-        Identificador único de la referencia en la base de datos
-
-    Returns
-    -------
-    Response
-        Redirección a la funcion ``reference.index()``
-
-    Notes
-    -----
-    Para ejecutar esta ruta se requiere que el usuario se encuentra autenticado en el sistema
     """  
     if request.method == "GET":
         ref= models.Reference.query.get(id)
@@ -170,18 +116,8 @@ def delete_reference(id: int) -> Response:
 def search() -> str:
     """
     Buscar referencias
-
     Cuando se envía una petición GET hacia la ruta ``/search`` se buscan en la base de datos todos las referencias que coincidan
     con la consulta en los campos de email y details de las referencias en la base de datos. 
-
-    Returns
-    -------
-    str
-        Renderizado de la plantilla ``index.html`` con los datos obtenidos previamente
-
-    Notes
-    -----
-    Para ejecutar esta ruta se requiere que el usuario se encuentra autenticado en el sistema
     """ 
     query = request.form.get("query")
     if query:

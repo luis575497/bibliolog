@@ -10881,4 +10881,26 @@ textarea.form-control-lg {
 }
 
 
+.error {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%,-50%);
+  -ms-transform: translate(-50%,-50%);
+  transform: translate(-50%,-50%);
+}
+
+.error h1 {
+  font-size: 186px;
+  font-weight: 900;
+  margin: 0;
+  text-transform: uppercase;
+  -webkit-background-clip: text;
+  background-size: cover;
+  background-position: center;
+}
+
+.error h3 {
+  font-weight: 700;
+}
 

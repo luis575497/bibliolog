@@ -4,6 +4,7 @@ from .extensions import db, login_manager, bcrypt, avatars, font_awesome, admin,
 from .routes.reference import reference
 from .routes.auth import login
 from .routes.stats import stats
+from .routes.errores import page_not_found
 
 import os
 
@@ -41,6 +42,9 @@ def create_app(test_config=None):
 
     #Toolbar Debug
     toolbar.init_app(app)
+
+    #Registar errores
+    app.register_error_handler(404, page_not_found)
 
     #Crear tablas
     from .models import models
