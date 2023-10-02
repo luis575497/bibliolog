@@ -1,13 +1,11 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash
+from flask import render_template, redirect, url_for, request, flash
 from flask_login import logout_user, login_user, login_required
 
+from . import login
 from .. import login_manager, bcrypt, db
-from ..models.models import User, Campus
-from ..forms.loginform import LoginForm
-from ..forms.profileform import ProfileForm
-
-
-login = Blueprint("login", __name__)
+from ..models.user import User
+from ..models.campus import Campus
+from .form import LoginForm, ProfileForm
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -81,8 +79,7 @@ def profile(id):
         profile_form.process()
 
         return render_template("profile.html", form=profile_form, user=user)
-    
-   
+
 
 @login.route("/user/<id>/update_profile", methods=["GET" , "POST"])
 @login_required

@@ -1,14 +1,13 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash, Response
 from flask_login import login_required, current_user
-from ..forms.statsdateform import StatsDateForm
 
-from ..models.models import Reference
+from . import stats
 from .. import db
+from .forms import StatsDateForm
+from ..models.reference import ReferenceModel
 
 from io import StringIO
 import csv
-
-stats = Blueprint("stats", __name__)
 
 @stats.route("/reference_stats", methods=["GET" , "POST"])
 @login_required
@@ -18,22 +17,22 @@ def reference_stats():
         return render_template("stats.html", form=date_form)
     
     if request.method == "POST":
-        references = Reference.query.filter(Reference.user_id == current_user.id).filter(Reference.fecha >= date_form.start_date.data, Reference.fecha <= date_form.end_date.data)
+        references = ReferenceModel.query.filter(ReferenceModel.user_id == current_user.id).filter(ReferenceModel.fecha >= date_form.start_date.data, ReferenceModel.fecha <= date_form.end_date.data)
         total_reference = references.count()
-        total_estudiantes = references.filter(Reference.user_type == "estudiantes").count()
-        total_docentes = references.filter(Reference.user_type == "docente-investigador").count()
-        total_administrativos = references.filter(Reference.user_type == "administrativo").count()
-        total_externos = references.filter(Reference.user_type == "general").count()
+        total_estudiantes = references.filter(ReferenceModel.user_type == "estudiantes").count()
+        total_docentes = references.filter(ReferenceModel.user_type == "docente-investigador").count()
+        total_administrativos = references.filter(ReferenceModel.user_type == "administrativo").count()
+        total_externos = references.filter(ReferenceModel.user_type == "general").count()
         exportar = (date_form.start_date.data, date_form.end_date.data)
 
         #Datos para crear los gráficos
         data_plot_chart = {
-            "data" : [references.filter(Reference.modality == "presencial").count(), references.filter(Reference.modality == "virtual").count()],
+            "data" : [references.filter(ReferenceModel.modality == "presencial").count(), references.filter(ReferenceModel.modality == "virtual").count()],
             "labels" : ["Presencial", "Virtual"],
         }
 
         #Grafico de lineas por días
-        data_date_query = db.session.query(Reference.fecha, db.func.count(Reference.fecha)).filter(Reference.user_id == current_user.id).filter(Reference.fecha >= date_form.start_date.data, Reference.fecha <= date_form.end_date.data).order_by(Reference.fecha.asc()).group_by(Reference.fecha).all()
+        data_date_query = db.session.query(ReferenceModel.fecha, db.func.count(ReferenceModel.fecha)).filter(ReferenceModel.user_id == current_user.id).filter(ReferenceModel.fecha >= date_form.start_date.data, ReferenceModel.fecha <= date_form.end_date.data).order_by(ReferenceModel.fecha.asc()).group_by(ReferenceModel.fecha).all()
         data_line_chart = { label.strftime("%d/%m/%Y") : data for (label, data) in data_date_query }
 
         context = {
@@ -52,7 +51,7 @@ def reference_stats():
 @stats.route("/reference_stats/report/<string:start>/<string:end>", methods=["GET" , "POST"])
 @login_required
 def export_report(start,end):
-    references = Reference.query.filter(Reference.user_id == current_user.id).filter(Reference.fecha >= start, Reference.fecha <= end).order_by(Reference.fecha.desc()).all()
+    references = ReferenceModel.query.filter(ReferenceModel.user_id == current_user.id).filter(ReferenceModel.fecha >= start, ReferenceModel.fecha <= end).order_by(ReferenceModel.fecha.desc()).all()
     
     #Crear el archivo para crear el informe csv
     output = StringIO()

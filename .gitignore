@@ -1,3 +1,7 @@
 instance/**/*
 venv/**/*
-**/build
+
+biblio/__pycache__/**/*
+biblio/auth/__pycache__/**/*
+biblio/reference/__pycache__/**/*
+biblio/stats/__pycache__/**/*
